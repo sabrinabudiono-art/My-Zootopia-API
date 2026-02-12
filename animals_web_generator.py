@@ -13,7 +13,8 @@ def serialize_animal(animal_obj):
     output += f'<div class="card__title">Name: {animal_obj["name"]}</div>\n'
     output += '<div class="card__text">'
     output += '<ul>'
-    output += f"<li><strong>Diet:</strong> {animal_obj["characteristics"]["diet"]}</li>\n"
+    if "diet" in animal_obj.get("characteristics", {}):
+        output += f"<li><strong>Diet:</strong> {animal_obj["characteristics"]["diet"]}</li>\n"
     output += f"<li><strong>Location</strong>: {animal_obj["locations"][0]}</li>\n"
     if "type" in animal_obj.get("characteristics", {}):
         output += f"<li><strong>Type</strong>: {animal_obj["characteristics"]["type"]}</li>\n"
@@ -23,7 +24,7 @@ def serialize_animal(animal_obj):
     return output
 
 
-def print_animals():
+def get_animals():
     """ Returns all the animals info """
     animals_data = load_data("animals_data.json")
     output = ""
@@ -40,7 +41,7 @@ def load_html():
 
 def replace_info(html):
     """ Replace the placeholder with real animals info """
-    animals_info = print_animals()
+    animals_info = get_animals()
     return html.replace("__REPLACE_ANIMALS_INFO__", animals_info)
 
 def write_html(data):
