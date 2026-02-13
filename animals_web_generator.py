@@ -1,10 +1,13 @@
-import json
-import requests
+import data_fetcher
 
-headers = {
-    'X-Api-Key' : '4UX4iKpH5Bi99WT5BsZNxOBkQKNlCCMTgGHkgdqp'
-}
-
+def get_animals_html(animals_data, animal_name):
+    output = ""
+    if not animals_data:
+        output += f"<h2>The animal '{animal_name}' doesnt exist.</h2>"
+    else:
+        for animal_obj in animals_data:
+            output += serialize_animal(animal_obj)
+    return output
 
 def serialize_animal(animal_obj):
     """ Handle a single animal serialization """
@@ -21,20 +24,6 @@ def serialize_animal(animal_obj):
     output += '</ul>'
     output += '</div>'
     output += '</li>'
-    return output
-
-
-def get_animals(animal_name):
-    """ Returns all the animals info """
-    request_url = f"https://api.api-ninjas.com/v1/animals?name={animal_name}"
-    animals_data = requests.get(request_url, headers=headers).json()
-    output = ""
-    if not animals_data:
-
-        output += f"<h2>The animal '{animal_name}' doesnt exist.</h2>"
-    else:
-        for animal_obj in animals_data:
-            output += serialize_animal(animal_obj)
     return output
 
 
@@ -56,8 +45,8 @@ def write_html(data):
 def main():
     html = load_html()
     animal_name = input("Enter a name of an animal:")
-    animals_info = get_animals(animal_name)
-    new_html = replace_info(html, animals_info)
+    animals_html = get_animals_html(data_fetcher.fetch_data(animal_name), animal_name)
+    new_html = replace_info(html, animals_html)
     write_html(new_html)
     print("Website was successfully generated to the file animals.html")
 
