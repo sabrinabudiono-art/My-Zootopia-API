@@ -1,10 +1,12 @@
 import json
+import requests
 
-def load_data(file_path):
-  """ Loads a JSON file """
-  with open(file_path, "r") as handle:
-    return json.load(handle)
+headers = {
+    'X-Api-Key' : '4UX4iKpH5Bi99WT5BsZNxOBkQKNlCCMTgGHkgdqp'
+}
 
+REQUEST_URL = "https://api.api-ninjas.com/v1/animals?name=fox"
+OUTPUT_FILE_NAME ="output.html"
 
 def serialize_animal(animal_obj):
     """ Handle a single animal serialization """
@@ -26,7 +28,7 @@ def serialize_animal(animal_obj):
 
 def get_animals():
     """ Returns all the animals info """
-    animals_data = load_data("animals_data.json")
+    animals_data = requests.get(REQUEST_URL, headers=headers).json()
     output = ""
     for animal_obj in animals_data:
         output += serialize_animal(animal_obj)
