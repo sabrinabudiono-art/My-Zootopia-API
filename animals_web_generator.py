@@ -29,8 +29,12 @@ def get_animals(animal_name):
     request_url = f"https://api.api-ninjas.com/v1/animals?name={animal_name}"
     animals_data = requests.get(request_url, headers=headers).json()
     output = ""
-    for animal_obj in animals_data:
-        output += serialize_animal(animal_obj)
+    if not animals_data:
+
+        output += f"<h2>The animal '{animal_name}' doesnt exist.</h2>"
+    else:
+        for animal_obj in animals_data:
+            output += serialize_animal(animal_obj)
     return output
 
 
