@@ -5,8 +5,6 @@ headers = {
     'X-Api-Key' : '4UX4iKpH5Bi99WT5BsZNxOBkQKNlCCMTgGHkgdqp'
 }
 
-REQUEST_URL = "https://api.api-ninjas.com/v1/animals?name=fox"
-OUTPUT_FILE_NAME ="output.html"
 
 def serialize_animal(animal_obj):
     """ Handle a single animal serialization """
@@ -26,9 +24,10 @@ def serialize_animal(animal_obj):
     return output
 
 
-def get_animals():
+def get_animals(animal_name):
     """ Returns all the animals info """
-    animals_data = requests.get(REQUEST_URL, headers=headers).json()
+    request_url = f"https://api.api-ninjas.com/v1/animals?name={animal_name}"
+    animals_data = requests.get(request_url, headers=headers).json()
     output = ""
     for animal_obj in animals_data:
         output += serialize_animal(animal_obj)
@@ -41,9 +40,8 @@ def load_html():
       return fileobj.read()
 
 
-def replace_info(html):
+def replace_info(html, animals_info):
     """ Replace the placeholder with real animals info """
-    animals_info = get_animals()
     return html.replace("__REPLACE_ANIMALS_INFO__", animals_info)
 
 def write_html(data):
@@ -53,8 +51,11 @@ def write_html(data):
 
 def main():
     html = load_html()
-    new_html = replace_info(html)
+    animal_name = input("Enter a name of an animal:")
+    animals_info = get_animals(animal_name)
+    new_html = replace_info(html, animals_info)
     write_html(new_html)
+    print("Website was successfully generated to the file animals.html")
 
 
 if __name__ == "__main__":
